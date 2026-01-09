@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>Sign Up</title>
     <style>
         * {
             margin: 0;
@@ -20,7 +20,7 @@
             min-height: 100vh;
         }
         
-        .Login {
+        .Signup {
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -69,7 +69,7 @@
             font-weight: 500;
         }
         
-        #username, #password {
+        #username, #password, #confirm_password, #email {
             width: 100%;
             height: 45px;
             padding: 12px;
@@ -81,7 +81,7 @@
             transition: all 0.3s;
         }
         
-        #username:focus, #password:focus {
+        #username:focus, #password:focus, #confirm_password, #email{
             outline: none;
             border-color: #2a5298;
             box-shadow: 0 0 0 3px rgba(42, 82, 152, 0.1);
@@ -108,36 +108,33 @@
         button:active {
             transform: translateY(0);
         }
-        a{
-            margin-top: 10px;
-            color: #2a5298;
-            position: relative;
-            margin-left: auto;
-
-        }
-        a:hover{
-            color: #ff67a1;
-        }
     </style>
 </head>
 <body>
-    <div class="Login">
-        <h1>Login</h1>
-        <form method="post" action="{% url 'login' %}">
-            {% csrf_token %}
+    <div class="Signup">
+        <h1>Signup</h1>
+        <form action="{%  url 'signup' %}" method="post">
+        {% csrf_token %}
             <div>
                 <div>
                     <label for="username">username</label>
                     <input type="text" name="username" id="username">
                 </div>
                 <div>
+                    <label for="email">email</label>
+                    <input type="email" name="email" id="email">
+                </div>
+                <div>
                     <label for="password">password</label>
                     <input type="password" name="password" id="password">
                 </div>
+                <div>
+                    <label for="confirm_password"> confirm password</label>
+                    <input type="password" name="confirm_password" id="confirm_password">
+                </div>
             </div>
-            <button type="submit" value="submit">Login</button>
+            <button type="submit" value="submit">Signup</button>
         </form>
-        <a href="{% url 'signup' %}">new user ? signup</a>
     </div>
 </body>
 </html>
