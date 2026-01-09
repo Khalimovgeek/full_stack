@@ -56,6 +56,7 @@ class ProfileAPI(APIView):
             {
                 "username": request.user.username,
                 "email": request.user.email,
+                "role": request.user.userprofile.role,
             }
         )
 
@@ -63,13 +64,23 @@ class ProfileAPI(APIView):
 class AdminDashBoradAPI(APIView):
     permission_classes = [IsAdmin]
 
-    def get(self,request):
-        return Response({"message":"Welcome admin"})
+    def get(self, request):
+        role = request.user.userprofile.role
+
+        return Response({
+            "role": role,
+            "message": f"Welcome {role}"
+        })
     
 
 class UserDashboardAPI(APIView):
 
     permission_classes = [IsAuthenticated]
 
-    def get(self,reqquest):
-        return Response({"message": "Welcome user"})
+    def get(self, request):
+        role = request.user.userprofile.role
+
+        return Response({
+            "role": role,
+            "message": f"Welcome {role}"
+        })
