@@ -1,10 +1,14 @@
 from django.db import models
+from django.contrib.auth.models import User
 
-from django.contrib.auth.models import AbstractBaseUser,PermissionsMixin,BaseUserManager
-# Create your models here.
+class UserProfile(models.Model):
+    ROLE_CHOICES = (
+        ("user", "User"),
+        ("admin", "Admin"),
+    )
 
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    role = models.CharField(max_length=10, choices=ROLE_CHOICES, default="user")
 
-class Users(AbstractBaseUser,BaseUserManager):
-
-    username = models.CharField(null=False, max_length=240)
-    
+    def __str__(self):
+        return f"{self.user.username} - {self.role}"
