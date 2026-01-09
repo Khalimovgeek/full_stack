@@ -3,10 +3,12 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth import authenticate
 
 from rest_framework_simplejwt.tokens import RefreshToken
 from .serializers import RegisterSerializer
+from .permissions import IsAdmin
 
 
 #----------------------------------------------------------------------------------------------------
@@ -56,3 +58,18 @@ class ProfileAPI(APIView):
                 "email": request.user.email,
             }
         )
+
+
+class AdminDashBoradAPI(APIView):
+    permission_classes = [IsAdmin]
+
+    def get(self,request):
+        return Response({"message":"Welcome admin"})
+    
+
+class UserDashboardAPI(APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def get(self,reqquest):
+        return Response({"message": "Welcome user"})
