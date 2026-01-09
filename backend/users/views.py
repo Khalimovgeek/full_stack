@@ -1,103 +1,58 @@
 # import modules
 
-import jwt
-from datetime import datetime, timedelta
-
-from django.conf import settings
-from django.shortcuts import render, redirect
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
 from django.contrib.auth import authenticate
-from django.http import HttpResponse, JsonResponse
 
-from django.contrib.auth.models import User
+from rest_framework_simplejwt.tokens import RefreshToken
+from .serializers import RegisterSerializer
 
 
 #----------------------------------------------------------------------------------------------------
 
-def generate_jwt(username):
-    payload = {
-        "username": username,
-        "exp": datetime.utcnow() + timedelta(hours=1),
-        "iat": datetime.utcnow(),
-    }
+class RegisterAPI(APIView):
+    permission_classes = []
 
-    token = jwt.encode(payload, settings.SECRET_KEY, algorithm="HS256")
-    return token
+    def post(self, request):
+        serializer = RegisterSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(
+                {"message": "User registered successfully"},
+                status=status.HTTP_201_CREATED
+            )
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+class LoginAPI(APIView):
+    permission_classes = []
 
-from django.views.decorators.csrf import csrf_exempt
-
-@csrf_exempt
-def login_view(request):
-    if request.method == "POST":
-        username = request.POST.get("username")
-        password = request.POST.get("password")
-
-        user = authenticate(request, username=username, password=password)
-
+    def post(self, request):
+        username = request.data.get("username")
+        password = request.data.get("password")
+        user = authenticate(username=username, password=password)
         if not user:
-            return render(
-                request,
-                "users/login.html",
+            return Response(
                 {"error": "Invalid credentials"},
-                status=401
+                status=status.HTTP_401_UNAUTHORIZED
             )
 
-        token = generate_jwt(username)
+        refresh = RefreshToken.for_user(user)
 
-        # TEMPORARY: store in session (for testing only)
-        request.session["jwt"] = token
-
-        return redirect("home")
-
-    return render(request, "users/login.html", status=200)
-
-def signup(request):
-    if request.method == "POST":
-        username = request.POST.get("username")
-        email = request.POST.get("email")
-        password = request.POST.get("password")
-        confirm_password = request.POST.get("confirm_password")
-        if password != confirm_password:
-            return JsonResponse(
-                {"error": "Passwords do not match"},
-                status=400
-            )
-
-        User.objects.create_user(
-            username=username,
-            email=email,
-            password=password
+        return Response(
+            {
+                "access": str(refresh.access_token),
+                "refresh": str(refresh),
+            },
+            status=status.HTTP_200_OK
         )
 
-        return JsonResponse(
-            {"message": "User created successfully"},
-            status=201
+class ProfileAPI(APIView):
+    def get(self, request):
+        return Response(
+            {
+                "username": request.user.username,
+                "email": request.user.email,
+            }
         )
-    return render(request, "users/signup.html",status=200)
-
-
-@csrf_exempt
-def home(request):
-    token = request.session.get("jwt")
-
-    if not token:
-        return redirect("login")
-
-    try:
-        payload = jwt.decode(
-            token,
-            settings.SECRET_KEY,
-            algorithms=["HS256"]
-        )
-    except jwt.ExpiredSignatureError:
-        return HttpResponse("Token expired", status=401)
-    except jwt.InvalidTokenError:
-        return HttpResponse("Invalid token", status=401)
-
-    return render(
-        request,
-        "users/home.html",
-        {"username": payload["username"]}
-    )
-         
