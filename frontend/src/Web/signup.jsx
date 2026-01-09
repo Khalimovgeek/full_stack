@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export default function SignUpPage() {
   const [formData, setFormData] = useState({
@@ -15,15 +17,34 @@ export default function SignUpPage() {
     });
   };
 
-  const handleSubmit = () => {
+
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
     if (formData.password !== formData.confirmPassword) {
-      alert('Passwords do not match!');
+      alert("Passwords do not match!");
       return;
     }
-    console.log('Sign up attempt:', formData);
-    alert(`Sign up submitted for: ${formData.username}`);
-    // Add your signup logic here
+
+    try {
+      await axios.post("http://127.0.0.1:8000/api/v1/auth/register/", {
+        username: formData.username,
+        email: formData.email,
+        password: formData.password,
+      });
+
+      alert("Account created successfully");
+      navigate("/login");
+    } catch (error) {
+      console.error(error);
+      alert(
+        error.response?.data?.detail || "Signup failed. Try again."
+      );
+    }
   };
+
 
   return (
     <div style={{
