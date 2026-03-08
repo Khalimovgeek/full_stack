@@ -19,7 +19,7 @@ export default function HomePage() {
   }, []);
 
   const fetchTasks = async () => {
-    const API_BASE_URL = 'http://127.0.0.1:8000';
+    const API_BASE_URL = 'https://albinm.pythonanywhere.com';
     
     try {
       const token = localStorage.getItem("access");
@@ -54,7 +54,7 @@ export default function HomePage() {
 
   const handleSubmit = async () => {
     try {
-      const API_BASE_URL = 'http://127.0.0.1:8000'; // Change this to your backend URL
+      const API_BASE_URL = 'https://albinm.pythonanywhere.com'; // Change this to your backend URL
       
       if (editingTask) {
         // Update task
@@ -107,7 +107,7 @@ export default function HomePage() {
     if (!window.confirm('Are you sure you want to delete this task?')) return;
     
     try {
-      const API_BASE_URL = 'http://127.0.0.1:8000'; // Change this to your backend URL
+      const API_BASE_URL = 'https://albinm.pythonanywhere.com'; // Change this to your backend URL
       const token = localStorage.getItem("access");
       const response = await fetch(`${API_BASE_URL}/api/v1/tasks/${id}/`, {
         method: 'DELETE',

@@ -14,7 +14,7 @@ export default function UserDashboard() {
   const fetchTasks = async () => {
     try {
       const response = await axios.get(
-        "http://127.0.0.1:8000/api/v1/tasks/",
+        "https://albinm.pythonanywhere.com/api/v1/tasks/",
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,

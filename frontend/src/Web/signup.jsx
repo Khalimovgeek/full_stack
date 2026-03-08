@@ -29,7 +29,7 @@ export default function SignUpPage() {
     }
 
     try {
-      await axios.post("http://127.0.0.1:8000/api/v1/auth/register/", {
+      await axios.post("https://albinm.pythonanywhere.com/api/v1/auth/register/", {
         username: formData.username,
         email: formData.email,
         password: formData.password,
