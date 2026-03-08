@@ -215,3 +215,7 @@ django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: 'albinm.pythona
 [WARNING] 2026-03-08 02:39:29,512 django.request Not Found: /dos
 [WARNING] 2026-03-08 02:39:34,434 django.request Not Found: /docs
 [WARNING] 2026-03-08 02:39:44,073 django.request Not Found: /api
+[WARNING] 2026-03-08 03:07:59,949 django.request Unauthorized: /api/v1/admin/dashboard/
+[WARNING] 2026-03-08 03:15:48,734 django.request Not Found: /
+[WARNING] 2026-03-08 03:16:06,472 django.request Bad Request: /api/v1/auth/register/
+[WARNING] 2026-03-08 03:21:50,446 django.request Not Found: /

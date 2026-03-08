@@ -49,9 +49,9 @@ INSTALLED_APPS = [
 ]
 
 CORS_ALLOWED_ORIGINS = [
-    "https://albinm.pythonanywhere.com"
+    "https://albinm.pythonanywhere.com",
+    "https://full-stack-iota-nine.vercel.app/",
 ]
-
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
